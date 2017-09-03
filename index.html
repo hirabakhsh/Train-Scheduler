@@ -12,7 +12,7 @@
 </head>
 <body>
   <div class="jumbotron">
-    <h1 class="display-3">Employee Data Management</h1>
+    <h1 class="display-3">Train t</h1>
     <p class="lead">A Comprehensive Directory of Employee Billable Hours</p>
     <table class="table table-inverse" >
       <thead>
@@ -64,6 +64,7 @@
       storageBucket: "trainscheduler-42e32.appspot.com",
       messagingSenderId: "76872198006"
     };
+    
     firebase.initializeApp(config);
 
     // Create a variable to reference the database.
@@ -90,15 +91,15 @@
 
 
         database.ref().push({
-            trainName: trainName,
-            destination: destination,
-            firstTime: firstTime,
-            ftFrequency: ftFrequency,
-            // dateAdded: firebase.database.ServerValue.TIMESTAMP 
-    }); 
+          trainName: trainName,
+          destination: destination,
+          firstTime: firstTime,
+          ftFrequency: ftFrequency,
+          // dateAdded: firebase.database.ServerValue.TIMESTAMP 
+        }); 
 
-    // Clear user form
-    $("#add-train").val('');
+        // Clear user form
+        $("#add-train").val('');
     });
 
 
@@ -106,15 +107,15 @@
 
       var childSnapshot = childSnapshot.val();
 
-      var firstTimeConverted = moment(firstTime, "hh:mm").subtract(1, "years");
+      var firstTimeConverted = moment(childSnapshot.firstTime, "hh:mm").subtract(1, "years");
       // Current Time
       var currentTime = moment();
       // Difference between the times
       var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
       // Time apart (remainder)
-      var tRemainder = diffTime % ftFrequency;
+      var tRemainder = diffTime % childSnapshot.ftFrequency;
       // Minute Until Train
-      var tMinutesTillTrain = ftFrequency - tRemainder;
+      var tMinutesTillTrain = childSnapshot.ftFrequency - tRemainder;
       // Next Train
       var nextTrain = moment().add(tMinutesTillTrain, "minutes");
       var trainArrival = moment(nextTrain).format("hh:mm");
@@ -123,7 +124,7 @@
       console.log(childSnapshot.trainName);
       console.log(childSnapshot.destination);
       console.log(childSnapshot.firstTime);
-      console.log(childSnapshot.frequency);
+      console.log(childSnapshot.ftFrequency);
       console.log("i am converted " + firstTimeConverted);
       console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
       console.log("DIFFERENCE IN TIME: " + diffTime);
@@ -134,7 +135,7 @@
 
       $("#body").append("<tr><td>" + childSnapshot.trainName + "</td><td>" + childSnapshot.destination + "</td><td>" + childSnapshot.firstTime +
         "</td><td>" + childSnapshot.ftFrequency + "</td><td>" + trainArrival + "</td><td>" + tMinutesTillTrain + "</td></tr>");
-      })
+    })
 
   </script>
 </body>
